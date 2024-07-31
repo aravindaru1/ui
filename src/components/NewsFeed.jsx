@@ -67,7 +67,7 @@ function NewsFeed() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:3000/news');
+        const response = await fetch('https://mynewsapi.vercel.app/news');
         const { data: encryptedData, iv: ivHex } = await response.json();
 
         const apiKey = decryptKey;
@@ -129,7 +129,7 @@ function NewsFeed() {
 
     setLoadingMore(true);
     try {
-      const response = await axios.post('http://localhost:3000/news-more', { minNewsId: lastNewsId });
+      const response = await axios.post('https://mynewsapi.vercel.app/news-more', { minNewsId: lastNewsId });
 
       const { data: encryptedData, iv: ivHex } = response.data;
       if (!encryptedData || !ivHex) {
