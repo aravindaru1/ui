@@ -125,6 +125,32 @@ body {
   .share-button:hover {
     background-color: #45a049;
   }
+
+  .swipe-up-indicator {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 1000;
+    animation: swipeUpAnimation 1.5s infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes swipeUpAnimation {
+    0%, 100% {
+      transform: translate(-50%, 0);
+    }
+    50% {
+      transform: translate(-50%, -10px);
+    }
+  }
+  
 }
 
 /* Responsive design for different screen sizes */
