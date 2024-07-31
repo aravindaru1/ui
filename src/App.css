@@ -1,0 +1,188 @@
+/* General styles for news feed */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* border: 2px solid red; */
+  height: 100vh;
+  background-color: white;
+}
+
+::selection {
+  color: white;
+  background: green;
+}
+
+@media (min-width: 720px) {
+  .news-feed {
+    display: none; /* Hide the desktop version on larger screens */
+  }
+}
+
+@media (max-width: 720px) {
+  .news-feed {
+    overflow-y: auto;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scroll-snap-type: y mandatory;
+    background-color: transparent;
+  }
+
+  /* General styles for news item */
+  .news-item {
+    flex: 0 0 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 10px;
+    /* border-radius: 20px; */
+    background-color: white;
+    scroll-snap-align: start;
+    margin: 1px 0;
+    position: relative;
+    /* border: 2px solid black; */
+  }
+
+  .border {
+    border: 2px solid black;
+    background-color: white;
+    border-radius: 0 0 20px 20px;
+  }
+
+  /* Image styling within news item */
+  .news-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    margin-bottom: -40px;
+  }
+
+  /* Heading styling within news item */
+  .news-item h2 {
+    font-size: 18px;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    line-height: 35px;
+    margin-bottom: 5px;
+    color: #3f3f3f;
+    padding: 20px 6px 0 6px;
+  }
+
+  /* Paragraph styling within news item */
+  .news-item p {
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: #797979;
+    padding: 0 10px;
+    line-height: 30px;
+  }
+
+  /* .border{
+   height: 50%;
+   overflow: scroll;
+  } */
+  /* Source link styling */
+  .source-link {
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+    background-color: #4caf50;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: white;
+    font-size: 15px;
+    font-family: 'Lato', sans-serif;
+    margin-bottom: 10px;
+  }
+
+  /* Share button styling */
+  .share-button {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: 'Lato', sans-serif;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  .share-button:hover {
+    background-color: #45a049;
+  }
+}
+
+/* Responsive design for different screen sizes */
+@media (max-width: 767px) {
+  .news-item img {
+    margin-top: 0px;
+    height: 250px; /* Adjusted height for smaller screens */
+  }
+
+  .news-item h2 {
+    font-size: 14px; /* Adjusted font size for smaller screens */
+    line-height: 26px;
+  }
+
+  .news-item p {
+    font-size: 12px; /* Adjusted font size for smaller screens */
+    line-height: 26px;
+  }
+
+  .source-link {
+    padding: 8px 16px; /* Adjusted padding for smaller screens */
+    font-size: 14px; /* Adjusted font size for smaller screens */
+  }
+
+  .share-button {
+    padding: 8px 16px; /* Adjusted padding for smaller screens */
+    font-size: 14px; /* Adjusted font size for smaller screens */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .news-item img {
+    height: 200px; /* Adjusted height for medium screens */
+  }
+
+  .news-item h2 {
+    font-size: 17px; /* Adjusted font size for medium screens */
+    line-height: 32px;
+  }
+
+  .news-item p {
+    font-size: 13px; /* Adjusted font size for medium screens */
+    line-height: 28px;
+  }
+
+  .source-link {
+    padding: 9px 18px; /* Adjusted padding for medium screens */
+    font-size: 14px; /* Adjusted font size for medium screens */
+  }
+
+  .share-button {
+    padding: 9px 18px; /* Adjusted padding for medium screens */
+    font-size: 14px; /* Adjusted font size for medium screens */
+  }
+}
+
+.body {
+  display: flex;
+}
+
+
