@@ -9,7 +9,6 @@ const decryptKey = import.meta.env.VITE_KEY;
 const API = import.meta.env.VITE_APIKEY;
 const groq = new Groq({ apiKey: API, dangerouslyAllowBrowser: true });
 
-
 function NewsItem({ news, changedTitle, onShare }) {
   const newsItemRef = useRef(null);
 
@@ -49,7 +48,7 @@ async function getGroqChatCompletion(titles, setChangedTitles) {
     });
 
     setChangedTitles(prev => [...prev, ...changedSentences]);
- 
+
   } catch (error) {
     console.error('Error fetching changed titles:', error);
   }
@@ -63,11 +62,12 @@ function NewsFeed() {
   const [hasMore, setHasMore] = useState(true);
   const [changedTitles, setChangedTitles] = useState([]);
   const [processedCount, setProcessedCount] = useState(0);
+  const [showSwipeUp, setShowSwipeUp] = useState(true); // State for swipe-up indicator
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('https://mynewsapi.vercel.app/news');
+        const response = await fetch('http://localhost:3000/news');
         const { data: encryptedData, iv: ivHex } = await response.json();
 
         const apiKey = decryptKey;
@@ -85,14 +85,14 @@ function NewsFeed() {
 
         const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
         const parsedData = JSON.parse(decryptedText);
-        
+
         setNewsList(parsedData.news_list);
         if (parsedData && parsedData.data && Array.isArray(parsedData.data.news_list)) {
           setNewsList(parsedData.data.news_list);
         } else {
           console.error('Invalid data structure:', parsedData);
         }
-        
+
       } catch (error) {
         console.error('Error fetching or decrypting data:', error);
       }
@@ -115,44 +115,47 @@ function NewsFeed() {
     const newIndex = Math.floor(scrollTop / newsItemHeight);
     setActiveNews(newIndex);
 
+    if (newIndex >= 1 && showSwipeUp) {
+      setShowSwipeUp(false); // Hide swipe-up indicator after scrolling past the first news item
+    }
+
     if (newIndex >= newsList.length - 2 && hasMore && !loadingMore) {
       loadMoreNews();
     }
   };
 
   const loadMoreNews = async () => {
-    if (loadingMore) return; 
-    
+    if (loadingMore) return;
+
     setLoadingMore(true);
     try {
-      const response = await axios.post('https://mynewsapi.vercel.app/news-more', { minNewsId: lastNewsId });
+      const response = await axios.post('http://localhost:3000/news-more', { minNewsId: lastNewsId });
 
-  
       const { data: encryptedData, iv: ivHex } = response.data;
       if (!encryptedData || !ivHex) {
         throw new Error('Invalid data structure from /news-more');
       }
-  
+
       const apiKey = decryptKey;
-  
+
       // Convert hex strings to CryptoJS format
       const key = CryptoJS.enc.Utf8.parse(apiKey);
       const iv = CryptoJS.enc.Hex.parse(ivHex);
-  
+
       // Decrypt the data
       const decrypted = CryptoJS.AES.decrypt(
         { ciphertext: CryptoJS.enc.Hex.parse(encryptedData) },
         key,
         { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
       );
-  
+
       const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
       const parsedData = JSON.parse(decryptedText);
-  
+
       if (parsedData && parsedData.data && Array.isArray(parsedData.data.news_list)) {
         const newNewsList = [...newsList, ...parsedData.data.news_list];
         setNewsList(newNewsList);
-  
+
         if (parsedData.data.news_list.length > 0) {
           setLastNewsId(parsedData.data.news_list[parsedData.data.news_list.length - 1].hash_id);
         } else {
@@ -167,8 +170,6 @@ function NewsFeed() {
       setLoadingMore(false);
     }
   };
-  
-  
 
   const handleShare = async (newsItemRef) => {
     if (!newsItemRef.current) return;
@@ -198,16 +199,17 @@ function NewsFeed() {
       className="news-feed"
       onScroll={handleScroll}
     >
+      {showSwipeUp && (
+        <div className="swipe-up-indicator">
+          Swipe up for more news
+        </div>
+      )}
       {newsList.map((news, index) => (
         <NewsItem
           key={`${news.hash_id}_${index}`}
           news={news}
           changedTitle={changedTitles[index]}
           onShare={handleShare}
-          style={{
-            transform: `translateY(${index === activeNews ? '0' : '-100vh'})`,
-            transition: 'transform 0.3s ease-in-out',
-          }}
         />
       ))}
       {loadingMore && <div>Loading more...</div>}
